@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Modern Website</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>My Website</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button onclick="toggleTheme()">🌙</button>
+  </header>
+
+  <section class="hero">
+    <h2>Welcome 👋</h2>
+    <p>This is a modern website design</p>
+    <button onclick="showMessage()">Get Started</button>
+  </section>
+
+  <section id="about">
+    <h2>About</h2>
+    <p>This website is fast, responsive, and customizable.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <input type="text" placeholder="Your Name">
+    <input type="email" placeholder="Your Email">
+    <button>Send</button>
+  </section>
+
+  <footer>
+    <p>© 2026 My Website</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
