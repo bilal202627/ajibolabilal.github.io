@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My First Website</title>
+    <title>oxygen pharmaceutical</title>
 </head>
 <body>
-    <h1>Welcome to My Website</h1>
-    <p>This is my first website!</p>
+    <h1>Welcome to oxygen pharmaceutical</h1>
+    <p>This is oxygen pharmaceutical website!</p>
 </body>
 </html>
