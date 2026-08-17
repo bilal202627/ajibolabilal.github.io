@@ -1,1 +1,34 @@
-print (oxygen pharmaceutical 
+print (oxygen pharmaceutical)"""
+db.py
+Handles the SQLite database connection and schema for the Contacts app.
+"""
+
+import sqlite3
+from pathlib import Path
+
+DB_PATH = Path(__file__).parent / "contacts.db"
+
+
+def get_connection():
+    """Return a connection to the SQLite database."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row  # allows dict-like access to rows
+    return conn
+
+
+def init_db():
+    """Create the contacts table if it doesn't already exist."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS contacts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            location TEXT
+        )
+        """
+    )
+    conn.commit()
+    conn.close()
