@@ -16,4 +16,18 @@ python main.py list
 
 # Search by name or location
 python main.py search "Ilaro"
+# Add a medication (name, dose, quantity)
+python main.py add "Amoxicilline BGR" "1g" 14
+
+# List all medications
+python main.py list
+
+# Search by name
+python main.py search "Amox"
+
+# Update a medication (any combination of fields)
+python main.py update 1 --quantity 10
+
+# Delete a medication
+python main.py delete 1
 
