@@ -1,0 +1,83 @@
+"""
+medications.py
+Core CRUD (Create, Read, Update, Delete) operations for the Medication app.
+"""
+
+from db import get_connection
+
+
+def add_medication(name: str, dose: str, quantity: int):
+    """Insert a new medication into the database."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "INSERT INTO medications (name, dose, quantity) VALUES (?, ?, ?)",
+        (name, dose, quantity),
+    )
+    conn.commit()
+    new_id = cursor.lastrowid
+    conn.close()
+    return new_id
+
+
+def get_all_medications():
+    """Return a list of all medications."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM medications ORDER BY id")
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+
+def get_medication(med_id: int):
+    """Return a single medication by ID."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM medications WHERE id = ?", (med_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return row
+
+
+def search_medications(keyword: str):
+    """Search medications by name (case-insensitive)."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    like_term = f"%{keyword}%"
+    cursor.execute("SELECT * FROM medications WHERE name LIKE ?", (like_term,))
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+
+def update_medication(med_id: int, name: str = None, dose: str = None, quantity: int = None):
+    """Update one or more fields of an existing medication."""
+    med = get_medication(med_id)
+    if not med:
+        return False
+
+    new_name = name if name is not None else med["name"]
+    new_dose = dose if dose is not None else med["dose"]
+    new_quantity = quantity if quantity is not None else med["quantity"]
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        "UPDATE medications SET name = ?, dose = ?, quantity = ? WHERE id = ?",
+        (new_name, new_dose, new_quantity, med_id),
+    )
+    conn.commit()
+    conn.close()
+    return True
+
+
+def delete_medication(med_id: int):
+    """Delete a medication by ID."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM medications WHERE id = ?", (med_id,))
+    conn.commit()
+    deleted = cursor.rowcount > 0
+    conn.close()
+    return deleted
