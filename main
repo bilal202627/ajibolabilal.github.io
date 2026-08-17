@@ -1,0 +1,102 @@
+"""
+main.py
+Command-line interface for the Medication app.
+
+Usage:
+    python main.py add "Name" "Dose" Quantity
+    python main.py list
+    python main.py search "keyword"
+    python main.py update <id> [--name NAME] [--dose DOSE] [--quantity QTY]
+    python main.py delete <id>
+"""
+
+import argparse
+from db import init_db
+import medications
+
+
+def print_medication(row):
+    print(f"[{row['id']}] {row['name']} | {row['dose']} | Qty: {row['quantity']}")
+
+
+def cmd_add(args):
+    new_id = medications.add_medication(args.name, args.dose, args.quantity)
+    print(f"Medication added with ID {new_id}.")
+
+
+def cmd_list(args):
+    rows = medications.get_all_medications()
+    if not rows:
+        print("No medications found.")
+        return
+    for row in rows:
+        print_medication(row)
+
+
+def cmd_search(args):
+    rows = medications.search_medications(args.keyword)
+    if not rows:
+        print("No matching medications found.")
+        return
+    for row in rows:
+        print_medication(row)
+
+
+def cmd_update(args):
+    success = medications.update_medication(
+        args.id, name=args.name, dose=args.dose, quantity=args.quantity
+    )
+    if success:
+        print(f"Medication {args.id} updated.")
+    else:
+        print(f"No medication found with ID {args.id}.")
+
+
+def cmd_delete(args):
+    success = medications.delete_medication(args.id)
+    if success:
+        print(f"Medication {args.id} deleted.")
+    else:
+        print(f"No medication found with ID {args.id}.")
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(description="Simple Medication Tracker")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    p_add = subparsers.add_parser("add", help="Add a new medication")
+    p_add.add_argument("name")
+    p_add.add_argument("dose")
+    p_add.add_argument("quantity", type=int)
+    p_add.set_defaults(func=cmd_add)
+
+    p_list = subparsers.add_parser("list", help="List all medications")
+    p_list.set_defaults(func=cmd_list)
+
+    p_search = subparsers.add_parser("search", help="Search medications by name")
+    p_search.add_argument("keyword")
+    p_search.set_defaults(func=cmd_search)
+
+    p_update = subparsers.add_parser("update", help="Update an existing medication")
+    p_update.add_argument("id", type=int)
+    p_update.add_argument("--name")
+    p_update.add_argument("--dose")
+    p_update.add_argument("--quantity", type=int)
+    p_update.set_defaults(func=cmd_update)
+
+    p_delete = subparsers.add_parser("delete", help="Delete a medication")
+    p_delete.add_argument("id", type=int)
+    p_delete.set_defaults(func=cmd_delete)
+
+    return parser
+
+
+def main():
+    init_db()
+    parser = build_parser()
+    args = parser.parse_args()
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()
